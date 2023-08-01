@@ -141,8 +141,6 @@ export default function Home() {
         </div>
         <div className="mt-6 flex w-full max-w-[1200px] flex-col justify-between sm:flex-row sm:space-x-4">
           <div className="flex flex-col justify-center space-y-2 h-100 sm:w-2/4">
-            
-
             <LanguageSelect
               language={inputLanguage}
               onChange={(value) => {
@@ -174,7 +172,7 @@ export default function Home() {
             )}
           </div>
           <div className="flex flex-col justify-center h-full mt-8 space-y-2 sm:mt-0 sm:w-2/4">
-            <div className="w-full rounded-md bg-[#1F2937] px-4 py-2 text-neutral-200 text-xl font-bold text-center">Output</div>
+            <div className="w-full rounded-md bg-[#1F2937] px-4 py-2 text-neutral-200 font-bold text-center">Output</div>
               <CodeBlock code={outputCode} />
           </div>
         </div>
