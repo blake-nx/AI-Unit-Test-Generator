@@ -126,9 +126,18 @@ export default function Home() {
             : hasGenerated
             ? 'Output copied to clipboard!'
             : 'Enter your code, select your language, and click "Generate"'}
+
         </div>
+        
          <div className="flex items-center mt-2 space-x-2">
           <ModelSelect model={model} onChange={(value) => setModel(value)} />
+                                  <button
+            className="w-[140px] cursor-pointer rounded-md bg-violet-500 px-4 py-2 font-bold hover:bg-violet-600 active:bg-violet-700"
+            onClick={() => handleGenerate()}
+            disabled={loading}
+          >
+            {loading ? 'Generating...' : 'Generate'}
+          </button>
         </div>
         <div className="mt-6 flex w-full max-w-[1200px] flex-col justify-between sm:flex-row sm:space-x-4">
           <div className="flex flex-col justify-center space-y-2 h-100 sm:w-2/4">
@@ -169,13 +178,7 @@ export default function Home() {
               <CodeBlock code={outputCode} />
           </div>
         </div>
-        <button
-            className="w-[140px] cursor-pointer rounded-md bg-violet-500 px-4 py-2 my-4 font-bold hover:bg-violet-600 active:bg-violet-700"
-            onClick={() => handleGenerate()}
-            disabled={loading}
-          >
-            {loading ? 'Doing the thing...' : 'Generate'}
-          </button>
+
       </div>
     </>
   );

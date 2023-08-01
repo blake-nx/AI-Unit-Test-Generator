@@ -11,7 +11,7 @@ const createPrompt = (
 ) => {
 
     return endent`
-      You are an expert programmer in all programming languages. Create a unit test in "${inputLanguage}" for the following code. Do not include \`\`\`.
+      You are an expert programmer in all programming languages. Create a unit test in "${inputLanguage}" for the following code. Do not include \`\`\`. Do not include the backticks (no \`\`\`) or the language name prefix. Just the code.
       ${inputLanguage} code:
       ${inputCode}
        Do not include the backticks (no \`\`\`) or the language name prefix. Just the code.
