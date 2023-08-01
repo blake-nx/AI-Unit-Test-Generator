@@ -1,34 +1,21 @@
-import { APIKeyInput } from '@/components/APIKeyInput';
 import { CodeBlock } from '@/components/CodeBlock';
 import { LanguageSelect } from '@/components/LanguageSelect';
 import { ModelSelect } from '@/components/ModelSelect';
 import { TextBlock } from '@/components/TextBlock';
-import { OpenAIModel, TranslateBody } from '@/types/types';
+import { OpenAIModel, GenerateBody } from '@/types/types';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [inputLanguage, setInputLanguage] = useState<string>('JavaScript');
-  const [outputLanguage, setOutputLanguage] = useState<string>('Python');
   const [inputCode, setInputCode] = useState<string>('');
   const [outputCode, setOutputCode] = useState<string>('');
-  const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
+  const [model, setModel] = useState<OpenAIModel>('gpt-4');
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasTranslated, setHasTranslated] = useState<boolean>(false);
-  const [apiKey, setApiKey] = useState<string>('');
+  const [hasGenerated, sethasGenerated] = useState<boolean>(false);
 
-  const handleTranslate = async () => {
-    const maxCodeLength = model === 'gpt-3.5-turbo' ? 6000 : 12000;
-
-    if (!apiKey) {
-      alert('Please enter an API key.');
-      return;
-    }
-
-    if (inputLanguage === outputLanguage) {
-      alert('Please select different languages.');
-      return;
-    }
+  const handleGenerate = async () => {
+    const maxCodeLength = model === 'gpt-3.5-turbo-16k' ? 64000 : 32000;
 
     if (!inputCode) {
       alert('Please enter some code.');
@@ -47,15 +34,13 @@ export default function Home() {
 
     const controller = new AbortController();
 
-    const body: TranslateBody = {
+    const body: GenerateBody = {
       inputLanguage,
-      outputLanguage,
       inputCode,
       model,
-      apiKey,
     };
 
-    const response = await fetch('/api/translate', {
+    const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,7 +79,7 @@ export default function Home() {
     }
 
     setLoading(false);
-    setHasTranslated(true);
+    sethasGenerated(true);
     copyToClipboard(code);
   };
 
@@ -107,75 +92,53 @@ export default function Home() {
     document.body.removeChild(el);
   };
 
-  const handleApiKeyChange = (value: string) => {
-    setApiKey(value);
-
-    localStorage.setItem('apiKey', value);
-  };
-
   useEffect(() => {
-    if (hasTranslated) {
-      handleTranslate();
-    }
-  }, [outputLanguage]);
-
-  useEffect(() => {
-    const apiKey = localStorage.getItem('apiKey');
-
-    if (apiKey) {
-      setApiKey(apiKey);
+    if (hasGenerated) {
+      handleGenerate();
     }
   }, []);
+
+
 
   return (
     <>
       <Head>
-        <title>Code Translator</title>
+        <title>Unit Test Generator</title>
         <meta
           name="description"
-          content="Use AI to translate code from one language to another."
+          content="Use AI to generate Unit Tests."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#0E1117] px-4 pb-20 text-neutral-200 sm:px-10">
-        <div className="mt-10 flex flex-col items-center justify-center sm:mt-20">
-          <div className="text-4xl font-bold">AI Code Translator</div>
+        <div className="flex flex-col items-center justify-center mt-10 sm:mt-20">
+          <div className="text-4xl font-bold">Unit Test Generator</div>
         </div>
-
-        <div className="mt-6 text-center text-sm">
-          <APIKeyInput apiKey={apiKey} onChange={handleApiKeyChange} />
+        
+        <div className="flex items-center mt-2 space-x-2">
+          If your code is too long, you can switch to the GPT-3.5 model which has a limit of 16k tokens.
         </div>
-
-        <div className="mt-2 flex items-center space-x-2">
-          <ModelSelect model={model} onChange={(value) => setModel(value)} />
-
-          <button
-            className="w-[140px] cursor-pointer rounded-md bg-violet-500 px-4 py-2 font-bold hover:bg-violet-600 active:bg-violet-700"
-            onClick={() => handleTranslate()}
-            disabled={loading}
-          >
-            {loading ? 'Translating...' : 'Translate'}
-          </button>
-        </div>
-
-        <div className="mt-2 text-center text-xs">
+        
+        <div className="mt-2 text-xs text-center">
           {loading
-            ? 'Translating...'
-            : hasTranslated
+            ? 'Doing the thing...'
+            : hasGenerated
             ? 'Output copied to clipboard!'
-            : 'Enter some code and click "Translate"'}
+            : 'Enter your code, select your language, and click "Generate"'}
         </div>
-
+         <div className="flex items-center mt-2 space-x-2">
+          <ModelSelect model={model} onChange={(value) => setModel(value)} />
+        </div>
         <div className="mt-6 flex w-full max-w-[1200px] flex-col justify-between sm:flex-row sm:space-x-4">
-          <div className="h-100 flex flex-col justify-center space-y-2 sm:w-2/4">
-            <div className="text-center text-xl font-bold">Input</div>
+          <div className="flex flex-col justify-center space-y-2 h-100 sm:w-2/4">
+            
 
             <LanguageSelect
               language={inputLanguage}
               onChange={(value) => {
                 setInputLanguage(value);
-                setHasTranslated(false);
+                sethasGenerated(false);
                 setInputCode('');
                 setOutputCode('');
               }}
@@ -187,7 +150,7 @@ export default function Home() {
                 editable={!loading}
                 onChange={(value) => {
                   setInputCode(value);
-                  setHasTranslated(false);
+                  sethasGenerated(false);
                 }}
               />
             ) : (
@@ -196,29 +159,23 @@ export default function Home() {
                 editable={!loading}
                 onChange={(value) => {
                   setInputCode(value);
-                  setHasTranslated(false);
+                  sethasGenerated(false);
                 }}
               />
             )}
           </div>
-          <div className="mt-8 flex h-full flex-col justify-center space-y-2 sm:mt-0 sm:w-2/4">
-            <div className="text-center text-xl font-bold">Output</div>
-
-            <LanguageSelect
-              language={outputLanguage}
-              onChange={(value) => {
-                setOutputLanguage(value);
-                setOutputCode('');
-              }}
-            />
-
-            {outputLanguage === 'Natural Language' ? (
-              <TextBlock text={outputCode} />
-            ) : (
+          <div className="flex flex-col justify-center h-full mt-8 space-y-2 sm:mt-0 sm:w-2/4">
+            <div className="w-full rounded-md bg-[#1F2937] px-4 py-2 text-neutral-200 text-xl font-bold text-center">Output</div>
               <CodeBlock code={outputCode} />
-            )}
           </div>
         </div>
+        <button
+            className="w-[140px] cursor-pointer rounded-md bg-violet-500 px-4 py-2 my-4 font-bold hover:bg-violet-600 active:bg-violet-700"
+            onClick={() => handleGenerate()}
+            disabled={loading}
+          >
+            {loading ? 'Doing the thing...' : 'Generate'}
+          </button>
       </div>
     </>
   );

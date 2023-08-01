@@ -1,4 +1,4 @@
-import { TranslateBody } from '@/types/types';
+import { GenerateBody } from '@/types/types';
 import { OpenAIStream } from '@/utils';
 
 export const config = {
@@ -7,15 +7,13 @@ export const config = {
 
 const handler = async (req: Request): Promise<Response> => {
   try {
-    const { inputLanguage, outputLanguage, inputCode, model, apiKey } =
-      (await req.json()) as TranslateBody;
+    const { inputLanguage, inputCode, model,  } =
+      (await req.json()) as GenerateBody;
 
     const stream = await OpenAIStream(
       inputLanguage,
-      outputLanguage,
       inputCode,
       model,
-      apiKey,
     );
 
     return new Response(stream);
