@@ -1,11 +1,11 @@
-version: '3.8'
+version: "3.8"
 
 services:
   ai-code-translator:
     build: .
-    container_name: ai_code_translator
+    container_name: ai_test_generator
     ports:
-      - '3001:3000'
+      - "3001:3000"
     volumes:
       - .:/app
       - /app/node_modules
