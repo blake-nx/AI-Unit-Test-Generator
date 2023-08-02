@@ -8,7 +8,7 @@ Leverages the power of artificial intelligence to automate the generation of uni
 **1. Clone Repo**
 
 ```bash
-git clone [https://github.com/blake-nx/AI-Unit-Test-Generator.git](https://github.com/blake-nx/AI-Unit-Test-Generator.git)
+git clone https://github.com/blake-nx/AI-Unit-Test-Generator.git
 ```
 
 **2. Install Dependencies**
