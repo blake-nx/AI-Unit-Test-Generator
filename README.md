@@ -1,8 +1,7 @@
 # AI Unit Test Generator
 
 Leverages the power of artificial intelligence to automate the generation of unit tests.
-
-<img width="1012" alt="ai-unit-tests" src="https://github.com/blake-nx/AI-Unit-Test-Generator/assets/109250745/96cdd3a3-3886-4493-98c2-1b31c3161e7c">
+![ezgif-5-92eb9b5c8f](https://github.com/blake-nx/AI-Unit-Test-Generator/assets/109250745/ee127659-b6dd-4800-907a-bae6450e9cc5)
 
 ## Running Locally
 
